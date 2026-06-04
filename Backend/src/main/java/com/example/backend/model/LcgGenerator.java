@@ -139,15 +139,14 @@ public class LcgGenerator {
     }
 
     /**
-     * Normal(mean, stdDev) via transformación Box-Muller.
-     * Consume dos llamadas a next() — ambas con validación KS propia.
+     * Normal(mean, stdDev) via TCL: suma de 12 uniformes.
      */
     public double nextNormal(double mean, double stdDev) {
-        double u1 = next();
-        double u2 = next();
-        if (u1 <= 0) u1 = 1e-10;
-        double z = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
-        return mean + stdDev * z;
+        double sum = 0;
+        for (int i = 0; i < 12; i++) {
+            sum += next();
+        }
+        return mean + stdDev * (sum - 6);
     }
 
     /** Exponencial con media {@code mean} via transformación inversa: −mean × ln(U). */
